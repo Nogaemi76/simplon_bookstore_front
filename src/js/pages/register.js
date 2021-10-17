@@ -1,11 +1,65 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import api from "../utils/api";
 
 const Register = () => {
-    return (
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [errors, setErrors] = useState(null);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors(null);
+
+    const body = { email, password };
+
+    console.log("body", body);
+
+    try {
+      let result = await api.post("/users", body);
+      dispatch({ type: "USER_SET", payload: result.data });
+      history.push("/login");
+    } catch (err) {
+      setErrors(err.response?.data?.message);
+      dispatch({ type: "USER_RESET" });
+    }
+  };
+
+  return (
+    <div>
+      {errors && <p>{errors}</p>}
+      <form onSubmit={handleSubmit}>
         <div>
-            <h1>Register Page</h1>
+          <label>Email</label>
+          <input
+            name="userName"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-    );
+        <div>
+          <label>Password</label>
+          <input
+            name="userPassword"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button>Créer un compte</button>
+      </form>
+      <div>{email}</div>
+    </div>
+  );
 };
 
 export default Register;

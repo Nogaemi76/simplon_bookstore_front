@@ -7,10 +7,10 @@ const Layout = ({ children }) => {
     return (
         <div>            
             <Header />
-            <div>
+            <div style={{ display: 'flex', flexGrow: '1' }}>
                 <Nav />
                 <div>
-                    <main>
+                    <main style={{ backgroundColor: 'teal', width: '100%' }}>
                         {children}
                     </main>
                 </div>
